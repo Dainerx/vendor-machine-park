@@ -1,13 +1,7 @@
 package models;
 
 import java.io.Serializable;
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "address")
@@ -21,7 +15,7 @@ public class Address implements Serializable {
 	private int streetNumber;
 	@Column(name = "street", length=100, nullable = false, unique = false, insertable = true, updatable = true)
 	private String street;
-	@Column(name = "street", length=50, nullable = false, unique = false, insertable = true, updatable = true)
+	@Column(name = "city", length=50, nullable = false, unique = false, insertable = true, updatable = true)
 	private String city;
 	@Column(name = "post_code", length=50, nullable = false, unique = false, insertable = true, updatable = true)
 	private int postCode;

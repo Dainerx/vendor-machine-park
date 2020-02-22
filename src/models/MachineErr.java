@@ -2,14 +2,27 @@
  * 
  */
 package models;
+import java.io.Serializable;
 import java.util.Date;
-/**
- * @author 
- *
- */
-public class MachineErr {
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "machine_err")
+public class MachineErr implements Serializable {
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private int id;
+	@Column(name = "temperature", length=100, nullable = false, unique = false, insertable = true, updatable = true)
 	private String message;
+	@Column(name = "timestamp", length=100, nullable = false, unique = false, insertable = true, updatable = true)
 	private Date timestamp;
 	
 	public MachineErr(String message, Date timestamp) {

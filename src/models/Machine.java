@@ -2,16 +2,27 @@ package models;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "machine")
 public class Machine implements Serializable {
 	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private int id;
+	@Enumerated(EnumType.STRING)
 	private StateMachine stateMachine;
-	private Float temperature;
+	@Column(name = "temperature", length=50, nullable = false, unique = false, insertable = true, updatable = true)
+	private float temperature;
+    @OneToMany(mappedBy = "id", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private PaymentSystem paymentSystem[];
+    @OneToMany(mappedBy = "id", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private List<MachineErr> errors;
 	
 	
-	public Machine(StateMachine stateMachine, Float temperature, PaymentSystem paymentSystem[], List<MachineErr> errors) {
+	public Machine(StateMachine stateMachine, float temperature, PaymentSystem paymentSystem[], List<MachineErr> errors) {
 		this.stateMachine = stateMachine;
 		this.temperature = temperature;
 		this.paymentSystem = paymentSystem;
@@ -42,29 +53,5 @@ public class Machine implements Serializable {
 	public void setErrors(List<MachineErr> errors) {
 		this.errors = errors;
 	}
-	
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((temperature == null) ? 0 : temperature.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Machine other = (Machine) obj;
-		if (temperature == null) {
-			if (other.temperature != null)
-				return false;
-		} else if (!temperature.equals(other.temperature))
-			return false;
-		return true;
-	}	
+
 }

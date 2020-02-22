@@ -1,5 +1,10 @@
 package models;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("CarteAPuce")
 public class CarteAPuce extends PaymentSystem {
 	
 	public CarteAPuce(String state)

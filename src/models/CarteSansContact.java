@@ -1,5 +1,10 @@
 package models;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("CarteSansContact")
 public class CarteSansContact extends PaymentSystem {
 	
 	public CarteSansContact(String state)

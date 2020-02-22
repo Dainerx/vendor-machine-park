@@ -1,5 +1,9 @@
 package models;
 
+import javax.persistence.*;
+
+@Entity
+@DiscriminatorValue("MonnayeurPieces")
 public class MonnayeurPieces extends PaymentSystem {
 	
 	public MonnayeurPieces(String state)
