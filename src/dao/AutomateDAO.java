@@ -12,7 +12,7 @@ public class AutomateDAO {
 
 	    public void saveAutomate(Automate automate) {
 	        Transaction transaction = null;
-	        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+	        try (Session session = HibernateUtil.getSession()) {
 	            // start a transaction
 	            transaction = session.beginTransaction();
 	            // save the student object
@@ -29,7 +29,7 @@ public class AutomateDAO {
 
 	    public void updateAutomate(Automate automate) {
 	        Transaction transaction = null;
-	        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+	        try (Session session = HibernateUtil.getSession()) {
 	            // start a transaction
 	            transaction = session.beginTransaction();
 	            // save the student object
@@ -47,7 +47,7 @@ public class AutomateDAO {
 	    public void deleteAutomate(int id) {
 
 	        Transaction transaction = null;
-	        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+	        try (Session session = HibernateUtil.getSession()) {
 	            // start a transaction
 	            transaction = session.beginTransaction();
 
@@ -71,7 +71,7 @@ public class AutomateDAO {
 	    public Automate getAutomate(int id) {
 	        Transaction transaction = null;
 	        Automate automate = null;
-	        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+	        try (Session session = HibernateUtil.getSession()) {
 	            // start a transaction
 	            transaction = session.beginTransaction();
 	            // get an automate object
@@ -92,7 +92,7 @@ public class AutomateDAO {
 
 	        Transaction transaction = null;
 	        List <Automate> listOfUser = null;
-	        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+	        try (Session session = HibernateUtil.getSession()) {
 	            // start a transaction
 	            transaction = session.beginTransaction();
 	            // get an user object

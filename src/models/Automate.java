@@ -1,6 +1,7 @@
 package models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -39,7 +40,9 @@ public class Automate implements Serializable {
 	private StateAutomate stateAutomate;
 	@Column(name = "comments", length=1000, nullable = true, unique = false, insertable = true, updatable = true)
 	private String comments;
-	
+	@Column(name = "last_update", nullable = true, unique = false, insertable = true, updatable = true)
+	private Date lastUpdate;
+
 	public String getSerialNumber() {
 		return serialNumber; 
 	}
@@ -89,6 +92,13 @@ public class Automate implements Serializable {
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
+	
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -114,10 +124,8 @@ public class Automate implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return "Automate [machine=" + machine + ", serialNumber=" + serialNumber + ", articlesType=" + articlesType
+		return "Automate [serialNumber=" + serialNumber + ", machine=" + machine + ", articlesType=" + articlesType
 				+ ", address=" + address + ", area=" + area + ", gpsCoordinates=" + gpsCoordinates + ", stateAutomate="
-				+ stateAutomate + ", comments=" + comments + "]";
+				+ stateAutomate + ", comments=" + comments + ", lastUpdate=" + lastUpdate + "]";
 	}
-
-	
 }

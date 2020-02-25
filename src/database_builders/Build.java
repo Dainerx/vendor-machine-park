@@ -30,7 +30,7 @@ public class Build {
 		machine.addErrors(err);
 		machine.addPaymentSystem(c);
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = HibernateUtil.getSession()) {
         	// start a transaction
             transaction = session.beginTransaction();
            /*

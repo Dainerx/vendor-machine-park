@@ -1,62 +1,36 @@
 package utl;
 
 import java.util.Properties;
+import models.*;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
-import models.*;
-
-/**
- * Java based configuration
- *
- */
 public class HibernateUtil {
- private static SessionFactory sessionFactory;
 
- public static SessionFactory getSessionFactory() {
-  if (sessionFactory == null) {
-   try {
-    Configuration configuration = new Configuration();
+	private static SessionFactory sessionFactory = null;
 
-    // Hibernate settings equivalent to hibernate.cfg.xml's properties
-    Properties settings = new Properties();
-    settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
-    settings.put(Environment.URL, "jdbc:mysql://localhost:3306/vendor-machine-park?useSSL=false");
-    settings.put(Environment.USER, "root");
-    settings.put(Environment.PASS, "root");
-    settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
+	static { try{ loadSessionFactory(); }catch(Exception e){ System.err.println("Exception while initializing hibernate util.. "); e.printStackTrace(); } }
+	
+    public static void loadSessionFactory(){
+        Configuration configuration = new Configuration();
+        configuration.configure("../hibernate.cfg.xml");
+		configuration.addAnnotatedClass(Address.class);
+		configuration.addAnnotatedClass(Gps.class);
+		configuration.addAnnotatedClass(PaymentSystem.class);
+		configuration.addAnnotatedClass(MonnayeurPieces.class);
+		configuration.addAnnotatedClass(CarteAPuce.class);
+		configuration.addAnnotatedClass(CarteSansContact.class);
+		configuration.addAnnotatedClass(MachineErr.class);
+		configuration.addAnnotatedClass(Machine.class);
+		configuration.addAnnotatedClass(Automate.class);
 
-    settings.put(Environment.SHOW_SQL, "true");
-
-    settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-
-    settings.put(Environment.HBM2DDL_AUTO, "create-drop");
-
-    configuration.setProperties(settings);
-    configuration.addAnnotatedClass(Address.class);
-    configuration.addAnnotatedClass(Gps.class);
-    configuration.addAnnotatedClass(PaymentSystem.class);
-    configuration.addAnnotatedClass(MonnayeurPieces.class);
-    configuration.addAnnotatedClass(CarteAPuce.class);
-    configuration.addAnnotatedClass(CarteSansContact.class);
-    configuration.addAnnotatedClass(MachineErr.class);
-    configuration.addAnnotatedClass(Machine.class);
-    configuration.addAnnotatedClass(Automate.class);
-
-    ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-      .applySettings(configuration.getProperties()).build();
-    System.out.println("Hibernate Java Config serviceRegistry created");
-    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-    return sessionFactory;
-
-   } catch (Exception e) {
-    e.printStackTrace();
-   }
-  }
-  return sessionFactory;
- }
-}
+        ServiceRegistry srvcReg = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+        sessionFactory = configuration.buildSessionFactory(srvcReg);
+    }
+    
+    public static Session getSession() throws HibernateException { Session retSession=null; try { retSession = sessionFactory.openSession(); }catch(Throwable t){ System.err.println("Exception while getting session.. " + t.getMessage()); t.printStackTrace(); } if(retSession == null) { System.err.println("session is discovered null"); } return retSession; }}

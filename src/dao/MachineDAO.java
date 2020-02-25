@@ -11,11 +11,11 @@ import utl.HibernateUtil;
 
 public class MachineDAO {
 	    @SuppressWarnings("unchecked")
-	    public static List <Machine> getAllMachines() {
+	    public List <Machine> getAllMachines() {
 
 	        Transaction transaction = null;
 	        List <Machine> listofMachines = null;
-	        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+	        try (Session session = HibernateUtil.getSession()) {
 	            // start a transaction
 	            transaction = session.beginTransaction();
 	            listofMachines = session.createQuery("from Machine").getResultList();
