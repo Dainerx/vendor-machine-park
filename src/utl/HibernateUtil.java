@@ -8,14 +8,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
-import models.Address;
-import models.CarteAPuce;
-import models.CarteSansContact;
-import models.Machine;
-import models.MachineErr;
-import models.MonnayeurPieces;
-import models.PaymentSystem;
-
+import models.*;
 
 /**
  * Java based configuration
@@ -45,12 +38,14 @@ public class HibernateUtil {
 
     configuration.setProperties(settings);
     configuration.addAnnotatedClass(Address.class);
+    configuration.addAnnotatedClass(Gps.class);
     configuration.addAnnotatedClass(PaymentSystem.class);
     configuration.addAnnotatedClass(MonnayeurPieces.class);
     configuration.addAnnotatedClass(CarteAPuce.class);
     configuration.addAnnotatedClass(CarteSansContact.class);
     configuration.addAnnotatedClass(MachineErr.class);
     configuration.addAnnotatedClass(Machine.class);
+    configuration.addAnnotatedClass(Automate.class);
 
     ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
       .applySettings(configuration.getProperties()).build();

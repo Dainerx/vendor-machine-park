@@ -1,30 +1,56 @@
 package models;
 
 import java.io.Serializable;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+
+@Entity
+@Table(name = "automate")
 public class Automate implements Serializable {
 		
 	private static final long serialVersionUID = 1L;
+	@Id
+	@Column(name = "serial_number", nullable = false)
 	private String serialNumber;
+    @JoinColumn(name = "machine", unique = true)
+    @OneToOne(cascade = CascadeType.ALL)
+	private Machine machine;
+	@Enumerated(EnumType.STRING)
 	private ArticlesType articlesType;
+	@Embedded	 
 	private Address address;
+	@Column(name = "area", length=100, nullable = true, unique = false, insertable = true, updatable = true)
 	private String area; //which area it is at
+	@Embedded	 
 	private Gps gpsCoordinates;
+	@Enumerated(EnumType.STRING)
 	private StateAutomate stateAutomate;
+	@Column(name = "comments", length=1000, nullable = true, unique = false, insertable = true, updatable = true)
 	private String comments;
-	
 	
 	public String getSerialNumber() {
 		return serialNumber; 
 	}
 	public void setSerialNumber(String serialNumber) {
 		this.serialNumber = serialNumber;
+	}
+	public Machine getMachine() {
+		return machine;
+	}
+	public void setMachine(Machine machine) {
+		this.machine = machine;
 	}
 	public ArticlesType getArticlesType() {
 		return articlesType;
@@ -88,9 +114,10 @@ public class Automate implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return "Automate [serialNumber=" + serialNumber + ", articlesType=" + articlesType + ", address=" + address
-				+ ", area=" + area + ", gpsCoordinates=" + gpsCoordinates + ", stateAutomate=" + stateAutomate
-				+ ", comments=" + comments + "]";
+		return "Automate [machine=" + machine + ", serialNumber=" + serialNumber + ", articlesType=" + articlesType
+				+ ", address=" + address + ", area=" + area + ", gpsCoordinates=" + gpsCoordinates + ", stateAutomate="
+				+ stateAutomate + ", comments=" + comments + "]";
 	}
+
 	
 }

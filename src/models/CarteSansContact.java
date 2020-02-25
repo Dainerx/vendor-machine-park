@@ -7,6 +7,11 @@ import javax.persistence.Entity;
 @DiscriminatorValue("CarteSansContact")
 public class CarteSansContact extends PaymentSystem {
 	
+	public CarteSansContact()
+	{
+		super();
+	}
+
 	public CarteSansContact(String state)
 	{
 		super(state);

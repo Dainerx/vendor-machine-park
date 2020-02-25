@@ -7,9 +7,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,11 +22,16 @@ public class MachineErr implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private int id;
-	@Column(name = "temperature", length=100, nullable = false, unique = false, insertable = true, updatable = true)
+	@Column(name = "message", length=100, nullable = false, unique = false, insertable = true, updatable = true)
 	private String message;
 	@Column(name = "timestamp", length=100, nullable = false, unique = false, insertable = true, updatable = true)
 	private Date timestamp;
 	
+	public MachineErr() {
+		super();
+		this.message = "default";
+		this.timestamp = new Date();
+	}
 	public MachineErr(String message, Date timestamp) {
 		super();
 		this.message = message;

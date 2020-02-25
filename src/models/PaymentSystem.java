@@ -23,6 +23,10 @@ public class PaymentSystem implements Serializable {
 	protected int id;
 	@Column(name = "state", nullable = false)
 	protected String state;
+	
+	public PaymentSystem() {
+		this.state = "OK";
+	}
 	public PaymentSystem(String state) {
 		this.state = state;
 	}

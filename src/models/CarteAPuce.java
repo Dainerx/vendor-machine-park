@@ -7,6 +7,10 @@ import javax.persistence.Entity;
 @DiscriminatorValue("CarteAPuce")
 public class CarteAPuce extends PaymentSystem {
 	
+	public CarteAPuce()
+	{
+		super();
+	}
 	public CarteAPuce(String state)
 	{
 		super(state);

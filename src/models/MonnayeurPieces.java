@@ -6,6 +6,11 @@ import javax.persistence.*;
 @DiscriminatorValue("MonnayeurPieces")
 public class MonnayeurPieces extends PaymentSystem {
 	
+	public MonnayeurPieces()
+	{
+		super();
+	}
+
 	public MonnayeurPieces(String state)
 	{
 		super(state);

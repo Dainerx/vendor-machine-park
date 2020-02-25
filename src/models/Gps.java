@@ -3,19 +3,21 @@ package models;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "gps")
+@Embeddable
 public class Gps implements Serializable {
-	private static final long serialVersionUID = 1L;
-
 	@Column(name = "latitude", length=100, nullable = false, unique = false, insertable = true, updatable = true)
 	private float latitude;
 	@Column(name = "longitude", length=100, nullable = false, unique = false, insertable = true, updatable = true)
 	private float longitude;	
-	
+
+	public Gps() {
+		this.latitude = 0;
+		this.longitude = 0;
+	}
 	public Gps(float latitude, float longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
