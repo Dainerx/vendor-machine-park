@@ -1,7 +1,11 @@
 package models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,10 +13,12 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -42,7 +48,11 @@ public class Automate implements Serializable {
 	private String comments;
 	@Column(name = "last_update", nullable = true, unique = false, insertable = true, updatable = true)
 	private Date lastUpdate;
-
+	@Column(name = "sales", nullable = false, unique = false, insertable = true, updatable = true)
+	private float sales; 
+	public Automate () {
+		this.lastUpdate = new Date();
+	}
 	public String getSerialNumber() {
 		return serialNumber; 
 	}
@@ -99,6 +109,13 @@ public class Automate implements Serializable {
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
+	
+	public float getSales() {
+		return sales;
+	}
+	public void setSales(float sales) {
+		this.sales = sales;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -126,6 +143,6 @@ public class Automate implements Serializable {
 	public String toString() {
 		return "Automate [serialNumber=" + serialNumber + ", machine=" + machine + ", articlesType=" + articlesType
 				+ ", address=" + address + ", area=" + area + ", gpsCoordinates=" + gpsCoordinates + ", stateAutomate="
-				+ stateAutomate + ", comments=" + comments + ", lastUpdate=" + lastUpdate + "]";
+				+ stateAutomate + ", comments=" + comments + ", lastUpdate=" + lastUpdate + ", sales=" + sales + "]";
 	}
 }

@@ -28,6 +28,8 @@ public class HibernateUtil {
 		configuration.addAnnotatedClass(MachineErr.class);
 		configuration.addAnnotatedClass(Machine.class);
 		configuration.addAnnotatedClass(Automate.class);
+		configuration.addAnnotatedClass(Rapport.class);
+		configuration.addAnnotatedClass(Article.class);
 
         ServiceRegistry srvcReg = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         sessionFactory = configuration.buildSessionFactory(srvcReg);

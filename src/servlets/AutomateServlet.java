@@ -35,6 +35,11 @@ public class AutomateServlet extends HttpServlet {
     public void init() {
     	HibernateUtil.loadSessionFactory();
 		this.dao = new AutomateDAO();
+		List<Automate> list = this.dao.feedAutomates();
+		for (Automate a: list)
+		{
+			this.dao.saveAutomate(a);
+		}
     }
 
 
@@ -45,21 +50,24 @@ public class AutomateServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
         String action = request.getServletPath();
+    	try {
             switch (action) {
             case "/add":
             	insertAutomate(request, response);
                 break;
+            case "/one":
+            		listOneAutomate(request, response);
+            		break;
             case "/list":
-            	try {
 					listAutomate(request, response);
-				} catch (SQLException | IOException | ServletException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
             	break;
             default:
             	break;
             }
+    	} catch (SQLException | IOException | ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -71,14 +79,23 @@ public class AutomateServlet extends HttpServlet {
 		
 	}
 	
+    private void listOneAutomate(HttpServletRequest request, HttpServletResponse response)
+    throws SQLException, IOException, ServletException {
+    	int id = 1;
+    	Automate a = this.dao.getAutomate("1000");
+    	System.out.println(a);
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("automate-list.jsp");
+        dispatcher.forward(request, response);
+    }
+	
     private void listAutomate(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
         List <Automate> list = this.dao.getAllAutomates();
         request.setAttribute("list", list);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("automate-list.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("a.jsp");
         dispatcher.forward(request, response);
     }
-
+    
     private void insertAutomate(HttpServletRequest request, HttpServletResponse response)
     	    throws ServletException, IOException 
     {
