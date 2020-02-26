@@ -10,8 +10,8 @@ import models.Machine;
 import utl.HibernateUtil;
 
 public class MachineDAO {
-	    @SuppressWarnings("unchecked")
-	    public List <Machine> getAllMachines() {
+	@SuppressWarnings("unchecked")
+	public List<Machine> getAllMachines() {
 
 	        Transaction transaction = null;
 	        List <Machine> listofMachines = null;

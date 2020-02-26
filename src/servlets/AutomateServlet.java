@@ -1,10 +1,13 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.SQLException;
 
 import models.*;
 import utl.HibernateUtil;
+import utl.XmlWrapperRapport;
 import dao.*;
 import java.util.*;
 import javax.servlet.RequestDispatcher;
@@ -13,6 +16,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXB;
+
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class AutomateServlet
@@ -21,127 +27,154 @@ import javax.servlet.http.HttpServletResponse;
 public class AutomateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-
 	private AutomateDAO dao;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AutomateServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    public void init() {
-    	HibernateUtil.loadSessionFactory();
-		this.dao = new AutomateDAO();
-		List<Automate> list = this.dao.feedAutomates();
-		for (Automate a: list)
-		{
-			this.dao.saveAutomate(a);
-		}
-    }
-
-
+	private Gson gson = new Gson();
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public AutomateServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public void init() {
+		HibernateUtil.loadSessionFactory();
+		this.dao = new AutomateDAO();
+		List<Rapport> listR = this.dao.feedRapports();
+		for (Rapport r : listR) {
+			this.dao.saveRapport(r);
+		}	
+		List<Automate> list = this.dao.feedAutomates();
+		for (Automate a : list) {
+			this.dao.saveAutomate(a);
+		}
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-        String action = request.getServletPath();
-    	try {
-            switch (action) {
-            case "/add":
-            	insertAutomate(request, response);
-                break;
-            case "/one":
-            		listOneAutomate(request, response);
-            		break;
-            case "/list":
-					listAutomate(request, response);
-            	break;
-            default:
-            	break;
-            }
-    	} catch (SQLException | IOException | ServletException e) {
+		String action = request.getServletPath();
+		try {
+			switch (action) {
+			case "/add":
+				insertAutomate(request, response);
+				break;
+			case "/getone":
+				listOneAutomate(request, response);
+				break;
+			case "/list":
+				listAutomate(request, response);
+				break;
+			case "/rapportjson":
+				getRapportsJson(request, response);
+				break;
+			case "/rapportxml":
+				getRapportsXml(request, response);
+				break;
+			default:
+				break;
+			}
+		} catch (SQLException | IOException | ServletException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
-		
+
 	}
-	
-    private void listOneAutomate(HttpServletRequest request, HttpServletResponse response)
-    throws SQLException, IOException, ServletException {
-    	int id = 1;
-    	Automate a = this.dao.getAutomate("1000");
-    	System.out.println(a);
-    	RequestDispatcher dispatcher = request.getRequestDispatcher("automate-list.jsp");
-        dispatcher.forward(request, response);
-    }
-	
-    private void listAutomate(HttpServletRequest request, HttpServletResponse response)
-    throws SQLException, IOException, ServletException {
-        List <Automate> list = this.dao.getAllAutomates();
-        request.setAttribute("list", list);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("a.jsp");
-        dispatcher.forward(request, response);
-    }
-    
-    private void insertAutomate(HttpServletRequest request, HttpServletResponse response)
-    	    throws ServletException, IOException 
-    {
-				// Machine creation
-				Address ad = new Address(2, "a", "sarra", 2097);
-				CarteSansContact cc = new CarteSansContact("normal");
-				Set<PaymentSystem> pp = new HashSet<>();
-				Set<MachineErr> ll = new HashSet<>();
-				MachineErr err = new MachineErr();
-				err.setMessage("aze");
-				CarteSansContact c = new CarteSansContact();
-				Machine machine = new Machine(StateMachine.OK,23.4f,pp,ll);
-				machine.addErrors(err);
-				machine.addPaymentSystem(c);
-			
 
-    	        String serialNumber = "1123123";
-    	        String area = "area";
-    	        String comments = "";
-    	        //Address
-    	        int streetNumber = 12321;
-    	        String street = "street";
-    	        String city = "city";
-    	        int postCode = 223;
-    	        Address address = new Address(streetNumber, street, city, postCode);
-    	        // GPS
-    	        Gps gps = new Gps();
-    	        // ArticlesType
-    	        ArticlesType articlesType = ArticlesType.ColdDrinks;
-    	        // Construction de l'automate
-    	        Automate newAutomate = new Automate();
-    	        newAutomate.setSerialNumber(serialNumber);
-    	        //newAutomate.setArticlesType(ArticlesType);
-    	        newAutomate.setAddress(address);
-    	        newAutomate.setArea(area);
-    	        newAutomate.setGpsCoordinates(gps);
-    	        // on_ajoute_par_defaut_un automate en service, on ne va pas rajouter un automate hors-service si il est nouveau
-    	        newAutomate.setStateAutomate(StateAutomate.UP);
-    	        newAutomate.setComments(comments);
+	private void listOneAutomate(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		Automate a = this.dao.getAutomate("1000"); // Request from interface
+		RequestDispatcher dispatcher = request.getRequestDispatcher("automate-list.jsp");
+		dispatcher.forward(request, response);
+	}
 
-				newAutomate.setMachine(machine);
+	private void listAutomate(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+		List<Automate> list = this.dao.getAllAutomates();
+		request.setAttribute("list", list);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("automate-list.jsp");
+		dispatcher.forward(request, response);
+	}
 
-				this.dao.saveAutomate(newAutomate);
-    	        response.sendRedirect("newAutomate");
-    	        }
+	private void insertAutomate(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// Machine creation
+		Address ad = new Address(2, "a", "sarra", 2097);
+		CarteSansContact cc = new CarteSansContact("normal");
+		Set<PaymentSystem> pp = new HashSet<>();
+		Set<MachineErr> ll = new HashSet<>();
+		MachineErr err = new MachineErr();
+		err.setMessage("aze");
+		CarteSansContact c = new CarteSansContact();
+		Machine machine = new Machine(StateMachine.OK, 23.4f, pp, ll);
+		machine.addErrors(err);
+		machine.addPaymentSystem(c);
 
+		String serialNumber = "1123123";
+		String area = "area";
+		String comments = "";
+		// Address
+		int streetNumber = 12321;
+		String street = "street";
+		String city = "city";
+		int postCode = 223;
+		Address address = new Address(streetNumber, street, city, postCode);
+		// GPS
+		Gps gps = new Gps();
+		// ArticlesType
+		ArticlesType articlesType = ArticlesType.ColdDrinks;
+		// Construction de l'automate
+		Automate newAutomate = new Automate();
+		newAutomate.setSerialNumber(serialNumber);
+		// newAutomate.setArticlesType(ArticlesType);
+		newAutomate.setAddress(address);
+		newAutomate.setArea(area);
+		newAutomate.setGpsCoordinates(gps);
+		// on_ajoute_par_defaut_un automate en service, on ne va pas rajouter un
+		// automate hors-service si il est nouveau
+		newAutomate.setStateAutomate(StateAutomate.UP);
+		newAutomate.setComments(comments);
 
+		newAutomate.setMachine(machine);
+
+		this.dao.saveAutomate(newAutomate);
+		response.sendRedirect("listAutomate");
+	}
+
+	private void getRapportsJson(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		out.print(this.gson.toJson(this.dao.getAllRapports()));
+		out.flush();
+	}
+
+	private void getRapportsXml(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		StringWriter sw = new StringWriter();
+		XmlWrapperRapport xwr = new XmlWrapperRapport();
+		xwr.setRapports(this.dao.getAllRapports());
+		JAXB.marshal(xwr,sw);
+		String xmlString = sw.toString();
+		out.print(xmlString);
+		out.flush();
+	}
 
 }
