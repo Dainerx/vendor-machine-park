@@ -60,7 +60,7 @@ public class Gps implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return "Gps [latitude=" + latitude + ", longitude=" + longitude + "]";
+		return "(" + latitude + "," + longitude + ")";
 	}
 	
 	

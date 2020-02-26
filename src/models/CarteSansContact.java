@@ -26,4 +26,10 @@ public class CarteSansContact extends PaymentSystem {
 	{
 		this.state = "Error";
 	}
+	
+	@Override
+	public String toString() {
+		return "CarteSansContact [" + state + "]";
+	}
+
 }

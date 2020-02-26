@@ -71,8 +71,8 @@ public class Machine implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Machine [id=" + id + ", stateMachine=" + stateMachine + ", temperature=" + temperature
-				+ ", paymentSystem=" + paymentSystem + ", errors=" + errors + "]";
+		return "ID:" + id + "\n" + "State: " + stateMachine + "\n" + temperature + "°C\n" + 
+				"payment systems=" + paymentSystem + "\n" + "Rrrors=" + errors;
 	}
 
 }

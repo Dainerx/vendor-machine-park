@@ -30,4 +30,10 @@ public class MonnayeurPieces extends PaymentSystem {
 	{
 		this.state = "Vide";
 	}
+	
+	@Override
+	public String toString() {
+		return "MonnayeurPieces [" + state + "]";
+	}
+
 }

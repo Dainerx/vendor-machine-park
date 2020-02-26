@@ -25,4 +25,10 @@ public class CarteAPuce extends PaymentSystem {
 	{
 		this.state = "Error";
 	}
+	@Override
+	public String toString() {
+		return "CarteAPuce [" + state + "]";
+	}
+	
+	
 }

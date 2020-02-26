@@ -29,6 +29,7 @@ public class AutomateServlet extends HttpServlet {
 
 	private AutomateDAO dao;
 	private Gson gson = new Gson();
+	private List<Automate> la = new ArrayList<>();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -45,10 +46,17 @@ public class AutomateServlet extends HttpServlet {
 		for (Rapport r : listR) {
 			this.dao.saveRapport(r);
 		}	
+		
+		/*
+		 * 			List<Rapport> listR = this.dao.feedRapports();
+			for (Rapport r : listR) {
+				this.dao.saveRapport(r);
+			}	
 		List<Automate> list = this.dao.feedAutomates();
 		for (Automate a : list) {
 			this.dao.saveAutomate(a);
 		}
+		*/
 	}
 
 	/**
@@ -61,6 +69,9 @@ public class AutomateServlet extends HttpServlet {
 		String action = request.getServletPath();
 		try {
 			switch (action) {
+			case "/":
+				listAutomate(request, response);
+				break;
 			case "/add":
 				insertAutomate(request, response);
 				break;
@@ -69,6 +80,9 @@ public class AutomateServlet extends HttpServlet {
 				break;
 			case "/list":
 				listAutomate(request, response);
+				break;
+			case "/delete":
+				deleteAutomate(request,response);
 				break;
 			case "/rapportjson":
 				getRapportsJson(request, response);
@@ -99,22 +113,37 @@ public class AutomateServlet extends HttpServlet {
 	private void listOneAutomate(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		Automate a = this.dao.getAutomate("1000"); // Request from interface
-		RequestDispatcher dispatcher = request.getRequestDispatcher("automate-list.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("list-automate.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	private void listAutomate(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		List<Automate> list = this.dao.getAllAutomates();
+		this.la = list;
 		request.setAttribute("list", list);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("automate-list.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("list-automate.jsp");
 		dispatcher.forward(request, response);
 	}
 
+	private void deleteAutomate(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String serialNumber = request.getParameter("serialNumber");
+		for (Automate a : this.la)
+		{
+			System.out.println(a.getSerialNumber());
+			if (a.getSerialNumber().equals(serialNumber))
+			{
+				this.la.remove(a);
+			}
+		}
+		request.setAttribute("list", this.la);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("list-automate.jsp");
+		dispatcher.forward(request, response);
+	}
 	private void insertAutomate(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// Machine creation
-		Address ad = new Address(2, "a", "sarra", 2097);
 		CarteSansContact cc = new CarteSansContact("normal");
 		Set<PaymentSystem> pp = new HashSet<>();
 		Set<MachineErr> ll = new HashSet<>();
@@ -124,36 +153,22 @@ public class AutomateServlet extends HttpServlet {
 		Machine machine = new Machine(StateMachine.OK, 23.4f, pp, ll);
 		machine.addErrors(err);
 		machine.addPaymentSystem(c);
+	
+		Address address = new Address(99, "Avenue Jean Baptiste Clement", "Villetaneuse", 93430);
+		Gps gps = new Gps(48.954230f, 2.337950f);
 
-		String serialNumber = "1123123";
-		String area = "area";
-		String comments = "";
-		// Address
-		int streetNumber = 12321;
-		String street = "street";
-		String city = "city";
-		int postCode = 223;
-		Address address = new Address(streetNumber, street, city, postCode);
-		// GPS
-		Gps gps = new Gps();
-		// ArticlesType
-		ArticlesType articlesType = ArticlesType.ColdDrinks;
-		// Construction de l'automate
-		Automate newAutomate = new Automate();
-		newAutomate.setSerialNumber(serialNumber);
-		// newAutomate.setArticlesType(ArticlesType);
-		newAutomate.setAddress(address);
-		newAutomate.setArea(area);
-		newAutomate.setGpsCoordinates(gps);
-		// on_ajoute_par_defaut_un automate en service, on ne va pas rajouter un
-		// automate hors-service si il est nouveau
-		newAutomate.setStateAutomate(StateAutomate.UP);
-		newAutomate.setComments(comments);
-
-		newAutomate.setMachine(machine);
-
-		this.dao.saveAutomate(newAutomate);
-		response.sendRedirect("listAutomate");
+		Automate automate = new Automate();
+		int randomSerial = (int)(Math.random() * ((10000 - 1000) + 1)) + 1000;
+		String serialNumber = Integer.toString(randomSerial);
+		automate.setSerialNumber(serialNumber);
+		automate.setMachine(machine);
+		automate.setAddress(address);
+		automate.setGpsCoordinates(gps);
+		automate.setStateAutomate(StateAutomate.UP);
+		automate.setArea("Forum");
+		automate.setArticlesType(ArticlesType.Snacks);
+		this.dao.saveAutomate(automate);
+		response.sendRedirect("list");
 	}
 
 	private void getRapportsJson(HttpServletRequest request, HttpServletResponse response)
